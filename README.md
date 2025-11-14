@@ -1,35 +1,89 @@
 This is a Kotlin Multiplatform project targeting Android, iOS.
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+# OptiSoftgit  KMP
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+A multimodule full-featured Kotlin Multiplatform & Compose Multiplatform e-commerce project targeting Android, iOS, Desktop, and Server platforms, built
+with a feature-based modular architecture following Clean Architecture principles.
 
-### Build and Run Android Application
+The app is fully **responsive** and **adaptive** across all major form factors — phones (portrait & landscape), foldables, tablets, and desktops.
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
 
-### Build and Run iOS Application
+## ⚡ Architecture Overview
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+The project follows a **Clean Architecture** approach with **feature-based modularization**,
+ensuring separation of concerns, testability, and maintainability across all platforms.
 
----
+### 📦 Module Structure
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+```
+OptiSoftKMP/
+├── 🎯 composeApp/          # Main application module (UI layer)
+├── 🔧 build-logic/         # Build configuration and conventions
+├── 🌐 server/              # Ktor backend Restful API server
+├── 📊 data/                # Data layer (repositories, network, storage)
+├── 🎨 designsystem/        # UI design system and components  
+├── 📋 model/               # Data models and entities
+├── 🔄 common/              # Shared utilities and resources
+└── 🔥 feature/             # Feature modules
+    ├── forgotpassword/     # Password recovery
+    ├── home/               # Main product catalog
+    ├── login/              # User authentication
+    ├── ordercompleted/     # Order confirmation
+    ├── orders/             # Order history
+    ├── profile/            # User profile management
+    ├── register/           # User registration
+    └── settings/           # App settings
+```
+
+## 🎯 Architecture Principles
+
+### ✅ Current Strengths
+
+- **Feature-based modularization** for better organization
+- **Multiplatform support** (Android, iOS, Desktop)
+- **Clean Architecture** separation of concerns
+- **Dependency Injection** with Koin
+- **Type-safe project accessors** for build configuration
+- **Shared build logic** with convention plugins
+
+### 🚀 Key Benefits
+
+- **Scalability**: Easy to add new features as separate modules
+- **Maintainability**: Clear separation of concerns
+- **Testability**: Each module can be tested independently
+- **Reusability**: Shared code across all platforms
+- **Team Collaboration**: Different teams can work on different features
+- **Build Performance**: Parallel module compilation
+
+### 🔄 Data Flow
+
+```
+UI Layer (composeApp) 
+    ↓
+Feature Modules (feature:*)
+    ↓  
+Data Layer (data)
+    ↓
+Backend (server)
+```
+
+## 🧩 Technologies Used
+
+- **Kotlin Multiplatform** - Cross-platform development
+- **Compose Multiplatform** - Declarative UI framework
+- **Kotlin Coroutines & Flows** - Asynchronous programming & data streams
+- **Ktor Client** - HTTP client for API communication
+- **Kotlinx Serialization** - JSON serialization/deserialization
+- **Koin** - Dependency injection framework
+- **DataStore Preferences** - Type-safe data storage
+- **Kotlinx DateTime** - Date and time handling
+- **Material3** - Material Design 3 components
+- **Material3 Adaptive** - Responsive UI components
+- **Adaptive Layout** - Multi-screen layout support
+- **Adaptive Navigation** - Navigation for different screen sizes
+- **Kamel** - Image loading and caching
+- **ConstraintLayout Compose** - Complex layouts
+- **Convention Plugins** - Shared build configuration
+- **Kermit** - Multiplatform logging
+
+
