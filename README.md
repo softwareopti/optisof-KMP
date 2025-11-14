@@ -19,7 +19,6 @@ ensuring separation of concerns, testability, and maintainability across all pla
 OptiSoftKMP/
 ├── 🎯 composeApp/          # Main application module (UI layer)
 ├── 🔧 build-logic/         # Build configuration and conventions
-├── 🌐 server/              # Ktor backend Restful API server
 ├── 📊 data/                # Data layer (repositories, network, storage)
 ├── 🎨 designsystem/        # UI design system and components  
 ├── 📋 model/               # Data models and entities
