@@ -18,7 +18,8 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val networkModule = module {
-    factory(BaseUrlQualifier) { "https://optisof-api.onrender.com" }
+//    factory(BaseUrlQualifier) { "https://optisof-api.onrender.com" }
+    factory(BaseUrlQualifier) { "http://10.0.2.2:3006" }
 
     singleOf(::createJson)
     single {
