@@ -47,11 +47,11 @@ kotlin {
 }
 
 android {
-    namespace = "cl.multicaja.optisoft_kmp"
+    namespace = "cl.optisoft.optisoft_kmp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "cl.multicaja.optisoft_kmp"
+        applicationId = "cl.optisoft.optisoft_kmp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
