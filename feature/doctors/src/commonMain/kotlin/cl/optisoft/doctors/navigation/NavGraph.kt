@@ -11,4 +11,8 @@ fun NavGraphBuilder.doctorNavGraph(navController: NavController) {
     composable(route = DestinationRoutes.DoctorListScreen.route) {
         DoctorScreenView()
     }
+
+    composable(route = DestinationRoutes.OrderScreen.route) {
+        DoctorScreenView()
+    }
 }
