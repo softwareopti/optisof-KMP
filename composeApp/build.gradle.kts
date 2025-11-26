@@ -38,6 +38,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.1")
             implementation(project(":feature:doctors"))
+            implementation(project(":feature:order"))
             implementation(project(":common"))
             implementation(project(":core:di"))
             implementation(project.dependencies.platform(libs.koin.bom))
