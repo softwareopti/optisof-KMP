@@ -14,3 +14,4 @@ class DoctorResponse (
     val phone: String,
     val status: Boolean
 )
+

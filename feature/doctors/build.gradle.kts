@@ -50,7 +50,11 @@ kotlin {
             export(project(":core:designsystem"))
         }
     }
-
+    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
+        binaries.all {
+            freeCompilerArgs += "-Xapple-platform-version-min=15.0"
+        }
+    }
 
     // Source Sets
     sourceSets {
@@ -78,12 +82,25 @@ kotlin {
 
                 implementation(libs.kermit)
                 implementation(libs.kotlinx.serialization.json)
-
+//                implementation(compose.material3.pullrefresh)
+//                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
                 implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.1")
-
+                implementation("org.jetbrains.compose.foundation:foundation")
+                implementation("org.jetbrains.compose.foundation:foundation-layout")
+                implementation("org.jetbrains.compose.animation:animation")
+                implementation("io.coil-kt.coil3:coil-compose:3.0.0")
+//                implementation("androidx.emoji2:emoji2")
+//                implementation("org.jetbrains.compose.ui:ui-uikit")
+                implementation("media.kamel:kamel-image:0.9.3")
+                implementation("androidx.emoji2:emoji2:1.4.0")
+                implementation("androidx.emoji2:emoji2-views:1.4.0")
+                implementation("androidx.emoji2:emoji2-views-helper:1.4.0")
+                implementation("io.github.ismoy:imagepickerkmp:1.0.27")
                 implementation(project(":core:network"))
                 implementation(project(":core:designsystem"))
                 implementation(project(":common"))
+//                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+                implementation("network.chaintech:kmp-date-time-picker:1.1.1")
             }
         }
 

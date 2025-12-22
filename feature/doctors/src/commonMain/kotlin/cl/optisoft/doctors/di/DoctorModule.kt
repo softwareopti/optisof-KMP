@@ -4,6 +4,7 @@ import cl.optisoft.doctors.data.DataRepository
 import cl.optisoft.doctors.data.remote.RemoteImpl
 import cl.optisoft.doctors.data.repository.Remote
 import cl.optisoft.doctors.data.source.Factory
+import cl.optisoft.doctors.presentation.DoctorSaveViewModel
 import cl.optisoft.doctors.presentation.DoctorViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -19,5 +20,5 @@ val doctorModules = module {
     factoryOf(::DataRepository)
     factoryOf(::Factory)
     viewModelOf(::DoctorViewModel)
-//    viewModelOf(::ArticleDetailViewModel)
+    viewModelOf(::DoctorSaveViewModel)
 }
