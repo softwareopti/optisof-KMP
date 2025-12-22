@@ -12,7 +12,7 @@ fun Navigation(
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = DestinationRoutes.OrderScreen.route) {
-        doctorNavGraph(navController)
         orderNavGraph(navController)
+        doctorNavGraph(navController)
     }
 }

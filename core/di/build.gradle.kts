@@ -67,6 +67,7 @@ kotlin {
                 implementation(libs.kermit)
 
                 implementation(project(":feature:doctors"))
+                implementation(project(":feature:order"))
                 implementation(project(":core:network"))
                 // Add KMP dependencies here
             }

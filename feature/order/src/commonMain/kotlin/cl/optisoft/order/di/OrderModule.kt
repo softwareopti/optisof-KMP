@@ -11,7 +11,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val doctorModules = module {
+val orderModules = module {
 
     singleOf(::RemoteImpl).bind<Remote>()
     singleOf(::Factory).bind<Factory>()
