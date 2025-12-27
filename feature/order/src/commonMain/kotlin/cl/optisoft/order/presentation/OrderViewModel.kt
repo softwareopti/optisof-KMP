@@ -7,6 +7,7 @@ import cl.optisoft.common.response.combineResponses
 import cl.optisoft.common.states.ScreenState
 import cl.optisoft.network.response.NetworkErrors
 import cl.optisoft.order.data.DataRepository
+import cl.optisoft.order.data.model.RecommendationItem
 import cl.optisoft.order.presentation.state.OrderScreenState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -30,12 +31,17 @@ internal class OrderViewModel(
         viewModelScope.launch(coroutineDispatcher) {
             _state.value = Response.Loading
 
+            val result = repository.getAllRecommendations()
 
-            val result = async { repository.getAllRecommendations() }.await()
-
-
-            _state.value = combineResponses(result) { recommendation ->
-                OrderScreenState(recommendation)
+            _state.value = combineResponses(result) { recommendations ->
+                OrderScreenState(
+                    recommendationList = recommendations.map {
+                        RecommendationItem(
+                            id = it.id,
+                            title = it.title
+                        )
+                    }
+                )
             }
         }
     }
