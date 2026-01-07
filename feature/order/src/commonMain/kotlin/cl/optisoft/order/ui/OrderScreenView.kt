@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,19 +13,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -38,12 +38,11 @@ import cl.optisoft.order.data.model.RecommendationItem
 import cl.optisoft.order.presentation.OrderViewModel
 import cl.optisoft.order.presentation.state.OrderScreenState
 import cl.optisoft.order.ui.components.ChipItem
-import cl.optisoft.order.ui.components.EyeInputRow
 import cl.optisoft.order.ui.components.OpticalDotsLoading
 import cl.optisoft.order.ui.components.SectionCard
 import cl.optisoft.order.ui.components.ToggleRow
+import cl.optisoft.order.ui.components.TwoEyeInputs
 import kotlinx.coroutines.flow.StateFlow
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -53,25 +52,32 @@ internal fun OrderScreenView(
 ) {
     ContextOrder(
         uiState = viewModel.state,
+        viewModel = viewModel
     )
 }
-
 @Composable
-fun ContextOrder(
-    uiState: StateFlow<ScreenState<OrderScreenState, NetworkErrors>>
+private fun ContextOrder(
+    uiState: StateFlow<ScreenState<OrderScreenState, NetworkErrors>>,
+    viewModel: OrderViewModel
 ) {
     val state by uiState.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
+            .background(MaterialTheme.colorScheme.background)
     ) {
         state
             .onSuccess { screenState ->
                 OrderCreateForm(
-                    state = screenState
+                    state = screenState,
+                    onNameChange = viewModel::onNameChange,
+                    onPhoneChange = viewModel::onPhoneChange,
+                    onAddressChange = viewModel::onAddressChange,
+                    onSphereLeftChange = viewModel::onSphereLeftChange,
+                    onSphereRightChange = viewModel::onSphereRightChange,
+                    onLeftAddChange = viewModel::onLeftAddChange,
+                    onRightAddChange = viewModel::onRightAddChange,
                 )
             }
             .onError {
@@ -85,7 +91,14 @@ fun ContextOrder(
 
 @Composable
 fun OrderCreateForm(
-    state: OrderScreenState
+    state: OrderScreenState,
+    onNameChange: (String) -> Unit,
+    onPhoneChange: (String) -> Unit,
+    onAddressChange: (String) -> Unit,
+    onSphereLeftChange: (String) -> Unit,
+    onSphereRightChange: (String) -> Unit,
+    onLeftAddChange: (String) -> Unit,
+    onRightAddChange: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -95,9 +108,20 @@ fun OrderCreateForm(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        CustomerInfoSection()
-
-        PrescriptionSection()
+        CustomerInfoSection(
+            state = state,
+            onNameChange = onNameChange,
+            onPhoneChange = onPhoneChange,
+            onAddressChange = onAddressChange
+        )
+        Spacer(modifier = Modifier.padding(top = 8.dp))
+        PrescriptionSection(
+            state = state,
+            onSphereLeftChange = onSphereLeftChange,
+            onSphereRightChange = onSphereRightChange,
+            onLeftAddChange = onLeftAddChange,
+            onRightAddChange = onRightAddChange,
+        )
 
         RecommendationSection(
             recommendations = state.recommendationList
@@ -111,23 +135,31 @@ fun OrderCreateForm(
 }
 
 @Composable
-fun CustomerInfoSection() {
+fun CustomerInfoSection(
+    state: OrderScreenState,
+    onNameChange: (String) -> Unit,
+    onPhoneChange: (String) -> Unit,
+    onAddressChange: (String) -> Unit
+) {
     SectionCard(title = "Información personal") {
+
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = state.name,
+            onValueChange = onNameChange,
             label = { Text("Nombre y apellido") },
             modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = state.phone,
+            onValueChange = onPhoneChange,
             label = { Text("Teléfono") },
             modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = state.address,
+            onValueChange = onAddressChange,
             label = { Text("Dirección") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -135,21 +167,42 @@ fun CustomerInfoSection() {
 }
 
 @Composable
-fun PrescriptionSection() {
-    SectionCard(title = "Prescripción") {
+fun PrescriptionSection(
+    state: OrderScreenState,
+    onSphereLeftChange: (String) -> Unit,
+    onSphereRightChange: (String) -> Unit,
+    onLeftAddChange: (String) -> Unit,
+    onRightAddChange: (String) -> Unit,
+) {
+    SectionCard(title = "Esfera") {
+        TwoEyeInputs(
+            left = state.sphereLeft,
+            right = state.sphereRight,
+            addRight = state.addRight,
+            addLeft = state.addLeft,
+            onLeftSphereChange = onSphereLeftChange,
+            onRightSphereChange = onSphereRightChange,
+            onLeftAddChange = onLeftAddChange,
+            onRightAddChange = onRightAddChange,
+        )
+    }
 
-        Text("Esfera")
-        EyeInputRow()
-
-        Spacer(Modifier.height(8.dp))
-
-        Text("Cilindro / Axis")
+    Spacer(Modifier.height(4.dp))
+    SectionCard(title = "Cilindro / Axis") {
         CylinderAxisRow(eyeLabel = "Right")
         CylinderAxisRow(eyeLabel = "Left")
+    }
 
+    Spacer(Modifier.height(4.dp))
+    SectionCard(title = "") {
         ToggleRow("Prisma")
+    }
+
+    Spacer(Modifier.height(4.dp))
+    SectionCard(title = "") {
         ToggleRow("Distancia Pupilar")
     }
+
 }
 
 @Composable
@@ -227,12 +280,6 @@ fun ActionButtonsSection(
             )
         }
     }
-}
-
-@Preview()
-@Composable
-fun PrescriptionPreview() {
-    PrescriptionSection()
 }
 
 

@@ -17,7 +17,7 @@ internal class RemoteImpl(private val httpClient: HttpClient) : Remote {
                 headers {
                     append(
                         HttpHeaders.Authorization,
-                        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDliMzA4MDZlNDgzN2Q0NzM1YzMzMSIsInByb2ZpbGVJZCI6IjY4YWRiYjY1YzQwZTc5MGU2NGRmMTFkZCIsImlhdCI6MTc2Njg0NTM3NCwiZXhwIjoxNzY2ODc0MTc0fQ.OPEkMb4TtCQCaWjaRFoQ0F4MU3JCoSbJOnG6gq2b15o"
+                        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NWQxOTE0ZWZkZDY1YTc3OTM2MjFmNCIsInByb2ZpbGVJZCI6IjY4YWRiYjY1YzQwZTc5MGU2NGRmMTFkZCIsImlhdCI6MTc2Nzc4NDcxNywiZXhwIjoxNzY3ODEzNTE3fQ.zXAN6PN57pjW84rmgbH_URadgHHem8a1nejON12mb6A"
                     )
                 }
             }

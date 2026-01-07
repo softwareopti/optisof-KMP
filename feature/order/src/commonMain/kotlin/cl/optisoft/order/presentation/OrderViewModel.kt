@@ -10,7 +10,6 @@ import cl.optisoft.order.data.DataRepository
 import cl.optisoft.order.data.model.RecommendationItem
 import cl.optisoft.order.presentation.state.OrderScreenState
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,6 +24,42 @@ internal class OrderViewModel(
 
     init {
         fetchAllRecommendations()
+    }
+    fun onNameChange(value: String) {
+        updateState { it.copy(name = value) }
+    }
+
+    fun onPhoneChange(value: String) {
+        updateState { it.copy(phone = value) }
+    }
+
+    fun onAddressChange(value: String) {
+        updateState { it.copy(address = value) }
+    }
+
+    fun onSphereLeftChange(value: String) {
+        updateState { it.copy(sphereLeft = value) }
+    }
+
+    fun onSphereRightChange(value: String) {
+        updateState { it.copy(sphereRight = value) }
+    }
+
+    fun onLeftAddChange(value: String) {
+        updateState { it.copy(addLeft = value) }
+    }
+
+    fun onRightAddChange(value: String) {
+        updateState { it.copy(addRight = value) }
+    }
+
+    private fun updateState(
+        reducer: (OrderScreenState) -> OrderScreenState
+    ) {
+        val current = _state.value
+        if (current is Response.Success) {
+            _state.value = Response.Success(reducer(current.data))
+        }
     }
 
     private fun fetchAllRecommendations() {
