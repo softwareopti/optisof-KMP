@@ -81,7 +81,7 @@ private fun ContextOrder(
                 )
             }
             .onError {
-                Text(text = "Error loading order")
+                OpticalDotsLoading(text = "Error loading order", state = false)
             }
             .onLoading {
                 OpticalDotsLoading()

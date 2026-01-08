@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun OpticalDotsLoading(text: String = "Cargando información óptica…") {
+fun OpticalDotsLoading(text: String = "Cargando información óptica…", state: Boolean = true) {
     val transition = rememberInfiniteTransition()
     val alpha by transition.animateFloat(
         0.3f, 1f,
@@ -41,17 +41,20 @@ fun OpticalDotsLoading(text: String = "Cargando información óptica…") {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            repeat(3) {
-                Box(
-                    Modifier
-                        .size(10.dp)
-                        .alpha(alpha)
-                        .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
-                        )
-                )
+            if (state){
+                repeat(3) {
+                    Box(
+                        Modifier
+                            .size(10.dp)
+                            .alpha(alpha)
+                            .background(
+                                MaterialTheme.colorScheme.primary,
+                                shape = CircleShape
+                            )
+                    )
+                }
             }
         }
 

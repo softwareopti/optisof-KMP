@@ -53,7 +53,7 @@ fun PickerDialog(
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(vertical = 150.dp),
+                    contentPadding = PaddingValues(vertical = if(startIndex != 0) 150.dp else 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     itemsIndexed(values) { index, item ->
