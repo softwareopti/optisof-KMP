@@ -23,6 +23,7 @@ internal class OrderViewModel(
     val state: StateFlow<ScreenState<OrderScreenState, NetworkErrors>> = _state
 
     init {
+        _state.value = Response.Success(OrderScreenState())
         fetchAllRecommendations()
     }
     fun onNameChange(value: String) {
@@ -53,6 +54,14 @@ internal class OrderViewModel(
         updateState { it.copy(addRight = value) }
     }
 
+    fun onLeftAxisChange(value: String) {
+        updateState { it.copy(axisLeft = value) }
+    }
+
+    fun onRightAxisChange(value: String) {
+        updateState { it.copy(axisRight = value) }
+    }
+
     private fun updateState(
         reducer: (OrderScreenState) -> OrderScreenState
     ) {
@@ -60,6 +69,14 @@ internal class OrderViewModel(
         if (current is Response.Success) {
             _state.value = Response.Success(reducer(current.data))
         }
+    }
+
+    fun onCilindroLeftChange(value: String) {
+        updateState { it.copy(cilindroLeft = value) }
+    }
+
+    fun onCilindroRightChange(value: String) {
+        updateState { it.copy(cilindroRight = value) }
     }
 
     private fun fetchAllRecommendations() {

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -42,6 +40,7 @@ import cl.optisoft.order.ui.components.OpticalDotsLoading
 import cl.optisoft.order.ui.components.SectionCard
 import cl.optisoft.order.ui.components.ToggleRow
 import cl.optisoft.order.ui.components.TwoEyeInputs
+import cl.optisoft.order.ui.components.TwoEyeInputsCilindro
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -76,8 +75,12 @@ private fun ContextOrder(
                     onAddressChange = viewModel::onAddressChange,
                     onSphereLeftChange = viewModel::onSphereLeftChange,
                     onSphereRightChange = viewModel::onSphereRightChange,
+                    onCilindroLeftChange = viewModel::onCilindroLeftChange,
+                    onCilindroRightChange = viewModel::onCilindroRightChange,
                     onLeftAddChange = viewModel::onLeftAddChange,
                     onRightAddChange = viewModel::onRightAddChange,
+                    onLeftAxisChange = viewModel::onLeftAxisChange,
+                    onRightAxisChange = viewModel::onRightAxisChange,
                 )
             }
             .onError {
@@ -97,8 +100,13 @@ fun OrderCreateForm(
     onAddressChange: (String) -> Unit,
     onSphereLeftChange: (String) -> Unit,
     onSphereRightChange: (String) -> Unit,
+    onCilindroLeftChange: (String) -> Unit,
+    onCilindroRightChange: (String) -> Unit,
     onLeftAddChange: (String) -> Unit,
     onRightAddChange: (String) -> Unit,
+    onLeftAxisChange: (String) -> Unit,
+    onRightAxisChange: (String) -> Unit,
+
 ) {
     Column(
         modifier = Modifier
@@ -119,8 +127,12 @@ fun OrderCreateForm(
             state = state,
             onSphereLeftChange = onSphereLeftChange,
             onSphereRightChange = onSphereRightChange,
+            onCilindroLeftChange = onCilindroLeftChange,
+            onCilindroRightChange = onCilindroRightChange,
             onLeftAddChange = onLeftAddChange,
             onRightAddChange = onRightAddChange,
+            onLeftAxisChange = onLeftAxisChange,
+            onRightAxisChange = onRightAxisChange,
         )
 
         RecommendationSection(
@@ -171,26 +183,45 @@ fun PrescriptionSection(
     state: OrderScreenState,
     onSphereLeftChange: (String) -> Unit,
     onSphereRightChange: (String) -> Unit,
+    onCilindroLeftChange: (String) -> Unit,
+    onCilindroRightChange: (String) -> Unit,
     onLeftAddChange: (String) -> Unit,
     onRightAddChange: (String) -> Unit,
+    onLeftAxisChange: (String) -> Unit,
+    onRightAxisChange: (String) -> Unit,
+
 ) {
+
     SectionCard(title = "Esfera") {
         TwoEyeInputs(
-            left = state.sphereLeft,
-            right = state.sphereRight,
-            addRight = state.addRight,
-            addLeft = state.addLeft,
-            onLeftSphereChange = onSphereLeftChange,
-            onRightSphereChange = onSphereRightChange,
-            onLeftAddChange = onLeftAddChange,
-            onRightAddChange = onRightAddChange,
+            first_title = "Esfera",
+            second_title = "NearAdd",
+            eyeleft = state.sphereLeft,
+            eyeright = state.sphereRight,
+            complRight = state.addRight,
+            complLeft = state.addLeft,
+            onLeftEyeChange = onSphereLeftChange,
+            onRightEyeChange = onSphereRightChange,
+            onLeftComplChange = onLeftAddChange,
+            onRightComplChange = onRightAddChange
         )
     }
 
     Spacer(Modifier.height(4.dp))
     SectionCard(title = "Cilindro / Axis") {
-        CylinderAxisRow(eyeLabel = "Right")
-        CylinderAxisRow(eyeLabel = "Left")
+        TwoEyeInputsCilindro(
+            first_title = "Cilindro",
+            second_title = "Axis",
+            eyeleft = state.cilindroLeft,
+            eyeright = state.cilindroRight,
+            complRight = state.axisRight,
+            complLeft = state.axisLeft,
+            onLeftEyeChange = onCilindroLeftChange,
+            onRightEyeChange = onCilindroRightChange,
+            onLeftComplChange = onLeftAxisChange,
+            onRightComplChange = onRightAxisChange
+
+        )
     }
 
     Spacer(Modifier.height(4.dp))

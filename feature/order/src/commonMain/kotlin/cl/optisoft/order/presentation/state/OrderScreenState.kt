@@ -8,11 +8,15 @@ import cl.optisoft.order.data.model.RecommendationItem
 data class OrderScreenState(
     val recommendationList: List<RecommendationItem> = emptyList(),
     val order: OrderModel = OrderModel(),
-    var name: String = "",
-    var phone: String = "",
-    var address: String = "",
+    val name: String = "",
+    val phone: String = "",
+    val address: String = "",
     val sphereLeft: String = "",
     val sphereRight: String = "",
     val addRight: String = "",
     val addLeft: String = "",
+    val cilindroLeft: String = "",
+    val cilindroRight: String = "",
+    val axisRight: String = "",
+    val axisLeft: String = "",
 )
