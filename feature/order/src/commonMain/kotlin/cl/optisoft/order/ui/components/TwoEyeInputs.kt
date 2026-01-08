@@ -1,149 +1,121 @@
 package cl.optisoft.order.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import cl.optisoft.order.ui.model.ComplementType
 import cl.optisoft.order.ui.model.Eye
-import cl.optisoft.order.ui.model.OpticalType
+import cl.optisoft.order.ui.model.EyeOpticalType
 import cl.optisoft.order.ui.util.OpticalRanges
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun TwoEyeInputs(
-    first_title: String,
-    second_title: String,
-    eyeleft: String,
-    eyeright: String,
-    complRight: String,
-    complLeft: String,
+fun TwoEyeInputsBase(
+    firstTitle: String,
+    secondTitle: String,
+    eyeType: EyeOpticalType,
+    complementType: ComplementType,
+    leftEye: String,
+    rightEye: String,
+    leftCompl: String,
+    rightCompl: String,
     onLeftEyeChange: (String) -> Unit,
     onRightEyeChange: (String) -> Unit,
     onLeftComplChange: (String) -> Unit,
     onRightComplChange: (String) -> Unit
 ) {
     val sphereValues = remember { OpticalRanges.sphere() }
+    val cylinderValues = remember { OpticalRanges.cylinder() }
     val addValues = remember { OpticalRanges.add() }
-    var activeEye by remember { mutableStateOf(Eye.LEFT) }
-    var activeType by remember { mutableStateOf(OpticalType.SPHERE) }
+
+    var activeEye by remember { mutableStateOf<Eye?>(null) }
+    var activeField by remember { mutableStateOf<Any?>(null) }
     var showPicker by remember { mutableStateOf(false) }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(70.dp))
-            Text(first_title, modifier = Modifier.weight(1f))
-            Text(second_title, modifier = Modifier.weight(1f))
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "Right",
-                modifier = Modifier
-                    .padding(start = 2.dp, end = 10.dp)
-                    .width(50.dp).align(Alignment.CenterVertically)
-            )
-            OpticalPickerField(
-                label = "Right",
-                value = eyeright,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    activeEye = Eye.RIGHT
-                    activeType = OpticalType.SPHERE
-                    showPicker = true
-                }
-            )
 
-            OpticalPickerField(
-                label = "Right",
-                value = complRight,
-                modifier = Modifier.weight(1f),
-                onClick = {
+        Row {
+            Spacer(Modifier.width(70.dp))
+            Text(firstTitle, Modifier.weight(1f))
+            Text(secondTitle, Modifier.weight(1f))
+        }
+
+        EyeRow(
+            eyeLabel = "Right",
+            eyeValue = rightEye,
+            onEyeClick = {
+                activeEye = Eye.RIGHT
+                activeField = eyeType
+                showPicker = true
+            }
+        ) { modifier ->
+            ComplementField(
+                complementType = complementType,
+                value = rightCompl,
+                modifier = modifier,
+                onPickerClick = {
                     activeEye = Eye.RIGHT
-                    activeType = OpticalType.ADD
+                    activeField = complementType
                     showPicker = true
-                }
+                },
+                onValueChange = onRightComplChange
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "Left",
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .width(60.dp).align(Alignment.CenterVertically)
-            )
-            OpticalPickerField(
-                label = "Left",
-                value = eyeleft,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    activeEye = Eye.LEFT
-                    activeType = OpticalType.SPHERE
-                    showPicker = true
-                }
-            )
 
-            OpticalPickerField(
-                label = "Left",
-                value = complLeft,
-                modifier = Modifier.weight(1f),
-                onClick = {
+        EyeRow(
+            eyeLabel = "Left",
+            eyeValue = leftEye,
+            onEyeClick = {
+                activeEye = Eye.LEFT
+                activeField = eyeType
+                showPicker = true
+            }
+        ) { modifier ->
+            ComplementField(
+                complementType = complementType,
+                value = leftCompl,
+                modifier = modifier,
+                onPickerClick = {
                     activeEye = Eye.LEFT
-                    activeType = OpticalType.ADD
+                    activeField = complementType
                     showPicker = true
-                }
+                },
+                onValueChange = onLeftComplChange
             )
         }
     }
 
-    if (showPicker) {
+    if (showPicker && activeEye != null && activeField != null) {
         PickerDialog(
-            values = when (activeType) {
-                OpticalType.SPHERE -> sphereValues
-                OpticalType.ADD -> addValues
-                else -> listOf()
+            values = when (activeField) {
+                EyeOpticalType.SPHERE -> sphereValues
+                EyeOpticalType.CYLINDER -> cylinderValues
+                ComplementType.ADD -> addValues
+                else -> emptyList()
             },
-            zeroIndex = when (activeType) {
-                OpticalType.SPHERE -> "0.00"
-                OpticalType.ADD -> addValues.first()
-                else -> "0"
+            zeroIndex = when (activeField) {
+                ComplementType.ADD -> addValues.first()
+                else -> "0.00"
             },
             onSelect = { value ->
-                when (activeType) {
-                    OpticalType.SPHERE -> {
-                        when (activeEye) {
-                            Eye.LEFT -> onLeftEyeChange(value)
-                            Eye.RIGHT -> onRightEyeChange(value)
-                        }
+                when (activeField) {
+                    is EyeOpticalType -> {
+                        if (activeEye == Eye.LEFT) onLeftEyeChange(value)
+                        else onRightEyeChange(value)
                     }
 
-                    OpticalType.ADD,
-                    OpticalType.AXIS -> {
-                        when (activeEye) {
-                            Eye.LEFT -> onLeftComplChange(value)
-                            Eye.RIGHT -> onRightComplChange(value)
-                        }
+                    is ComplementType -> {
+                        if (activeEye == Eye.LEFT) onLeftComplChange(value)
+                        else onRightComplChange(value)
                     }
                 }
                 showPicker = false
@@ -153,145 +125,91 @@ fun TwoEyeInputs(
     }
 }
 
+@Composable
+private fun ComplementField(
+    complementType: ComplementType,
+    value: String,
+    modifier: Modifier,
+    onPickerClick: () -> Unit,
+    onValueChange: (String) -> Unit
+) {
+    when (complementType) {
+        ComplementType.AXIS ->
+            AxisInputField(
+                value = value,
+                onChange = onValueChange,
+                modifier = modifier
+            )
+
+        ComplementType.ADD ->
+            OpticalPickerField(
+                label = "Add",
+                value = value,
+                modifier = modifier,
+                onClick = onPickerClick
+            )
+    }
+}
 
 @Composable
-fun TwoEyeInputsCilindro(
-    first_title: String,
-    second_title: String,
-    eyeleft: String,
-    eyeright: String,
-    complRight: String,
-    complLeft: String,
-    onLeftEyeChange: (String) -> Unit,
-    onRightEyeChange: (String) -> Unit,
-    onLeftComplChange: (String) -> Unit,
-    onRightComplChange: (String) -> Unit
+fun AxisInputField(
+    value: String,
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val sphereValues = remember { OpticalRanges.sphere() }
-    var activeEye by remember { mutableStateOf(Eye.LEFT) }
-    var activeType by remember { mutableStateOf(OpticalType.SPHERE) }
-    var showPicker by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(70.dp))
-            Text(first_title, modifier = Modifier.weight(1f))
-            Text(second_title, modifier = Modifier.weight(1f))
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "Right",
-                modifier = Modifier
-                    .padding(start = 2.dp, end = 10.dp)
-                    .width(50.dp).align(Alignment.CenterVertically)
-            )
-            OpticalPickerField(
-                label = "Right",
-                value = eyeright,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    activeEye = Eye.RIGHT
-                    activeType = OpticalType.SPHERE
-                    showPicker = true
-                }
-            )
+    TextField(
+        value = value,
+        onValueChange = { input ->
+            if (input.isEmpty()) {
+                onChange("")
+                return@TextField
+            }
 
-            OutlinedTextField(
-                modifier = Modifier.weight(1f),
-                value = complRight,
-                onValueChange = { value ->
-                    if (value.all { it.isDigit() }) {
-                        val number = value.toIntOrNull()
+            val number = input.toIntOrNull()
+            if (number != null && number in 0..180) {
+                onChange(input)
+            }
+        },
+        label = { Text("Axis") },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number
+        ),
+        singleLine = true,
+        modifier = modifier
+            .focusRequester(focusRequester)
+            .clickable {
+                focusRequester.requestFocus()
+            }
+    )
+}
 
-                        if (number == null || number in 0..180) {
-                            onRightComplChange(value)
-                        }
-                    }
-                },
-                label = { Text("Right") },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
-                singleLine = true
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "Left",
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .width(60.dp).align(Alignment.CenterVertically)
-            )
-            OpticalPickerField(
-                label = "Left",
-                value = eyeleft,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    activeEye = Eye.LEFT
-                    activeType = OpticalType.SPHERE
-                    showPicker = true
-                }
-            )
+@Composable
+private fun EyeRow(
+    eyeLabel: String,
+    eyeValue: String,
+    onEyeClick: () -> Unit,
+    complementField: @Composable (Modifier) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = eyeLabel,
+            modifier = Modifier
+                .width(60.dp)
+                .align(Alignment.CenterVertically)
+        )
 
-            OutlinedTextField(
-                modifier = Modifier.weight(1f),
-                value = complLeft,
-                onValueChange = { value ->
-                    if (value.all { it.isDigit() }) {
-                        val number = value.toIntOrNull()
+        OpticalPickerField(
+            label = eyeLabel,
+            value = eyeValue,
+            modifier = Modifier.weight(1f),
+            onClick = onEyeClick
+        )
 
-                        if (number == null || number in 0..180) {
-                            onLeftComplChange(value)
-                        }
-                    }
-                },
-                label = { Text("Left") },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
-                singleLine = true
-            )
-        }
-        if (showPicker) {
-            PickerDialog(
-                values = when (activeType) {
-                    OpticalType.SPHERE -> sphereValues
-                    else -> listOf()
-                },
-                zeroIndex = when (activeType) {
-                    OpticalType.SPHERE -> "0.00"
-                    else -> "0"
-                },
-                onSelect = { value ->
-                    when (activeType) {
-                        OpticalType.SPHERE -> {
-                            when (activeEye) {
-                                Eye.LEFT -> onLeftEyeChange(value)
-                                Eye.RIGHT -> onRightEyeChange(value)
-                            }
-                        }
-
-                        OpticalType.ADD,
-                        OpticalType.AXIS -> {
-                            when (activeEye) {
-                                Eye.LEFT -> onLeftComplChange(value)
-                                Eye.RIGHT -> onRightComplChange(value)
-                            }
-                        }
-                    }
-                    showPicker = false
-                },
-                onDismiss = { showPicker = false }
-            )
-        }
+        complementField(Modifier.weight(1f))
     }
 }

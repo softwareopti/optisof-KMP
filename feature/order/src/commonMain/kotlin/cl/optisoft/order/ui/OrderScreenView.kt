@@ -39,8 +39,9 @@ import cl.optisoft.order.ui.components.ChipItem
 import cl.optisoft.order.ui.components.OpticalDotsLoading
 import cl.optisoft.order.ui.components.SectionCard
 import cl.optisoft.order.ui.components.ToggleRow
-import cl.optisoft.order.ui.components.TwoEyeInputs
-import cl.optisoft.order.ui.components.TwoEyeInputsCilindro
+import cl.optisoft.order.ui.components.TwoEyeInputsBase
+import cl.optisoft.order.ui.model.ComplementType
+import cl.optisoft.order.ui.model.EyeOpticalType
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -193,34 +194,36 @@ fun PrescriptionSection(
 ) {
 
     SectionCard(title = "Esfera") {
-        TwoEyeInputs(
-            first_title = "Esfera",
-            second_title = "NearAdd",
-            eyeleft = state.sphereLeft,
-            eyeright = state.sphereRight,
-            complRight = state.addRight,
-            complLeft = state.addLeft,
+        TwoEyeInputsBase(
+            firstTitle = "Esfera",
+            secondTitle = "NearAdd",
+            leftEye = state.sphereLeft,
+            rightEye = state.sphereRight,
+            leftCompl = state.addLeft,
+            rightCompl = state.addRight,
             onLeftEyeChange = onSphereLeftChange,
             onRightEyeChange = onSphereRightChange,
             onLeftComplChange = onLeftAddChange,
-            onRightComplChange = onRightAddChange
+            onRightComplChange = onRightAddChange,
+            eyeType = EyeOpticalType.SPHERE,
+            complementType = ComplementType.ADD
         )
     }
 
-    Spacer(Modifier.height(4.dp))
-    SectionCard(title = "Cilindro / Axis") {
-        TwoEyeInputsCilindro(
-            first_title = "Cilindro",
-            second_title = "Axis",
-            eyeleft = state.cilindroLeft,
-            eyeright = state.cilindroRight,
-            complRight = state.axisRight,
-            complLeft = state.axisLeft,
+    SectionCard(title = "Astigmatismo") {
+        TwoEyeInputsBase(
+            firstTitle = "Cilindro",
+            secondTitle = "Axis",
+            leftEye = state.cilindroLeft,
+            rightEye = state.cilindroRight,
+            leftCompl = state.axisLeft,
+            rightCompl = state.axisRight,
             onLeftEyeChange = onCilindroLeftChange,
             onRightEyeChange = onCilindroRightChange,
             onLeftComplChange = onLeftAxisChange,
-            onRightComplChange = onRightAxisChange
-
+            onRightComplChange = onRightAxisChange,
+            eyeType = EyeOpticalType.CYLINDER,
+            complementType = ComplementType.AXIS
         )
     }
 

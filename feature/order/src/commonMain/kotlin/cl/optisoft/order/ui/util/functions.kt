@@ -8,10 +8,10 @@ object OpticalRanges {
         generateRange(-12.0, 12.0, 0.25, withSign = true)
 
     fun cylinder(): List<String> =
-        generateRange(-6.0, 0.0, 0.25, withSign = false)
+        generateRange(-6.0, 6.0, 0.25, withSign = false)
 
     fun add(): List<String> =
-        generateRange(0.75, 4.0, 0.25, withSign = true)
+        generateRange(0.75, 8.0, 0.25, withSign = true)
 
     fun axis(): List<String> =
         (0..180).map { it.toString() }

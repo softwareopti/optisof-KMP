@@ -61,6 +61,13 @@ internal class OrderViewModel(
     fun onRightAxisChange(value: String) {
         updateState { it.copy(axisRight = value) }
     }
+    fun onCilindroLeftChange(value: String) {
+        updateState { it.copy(cilindroLeft = value) }
+    }
+
+    fun onCilindroRightChange(value: String) {
+        updateState { it.copy(cilindroRight = value) }
+    }
 
     private fun updateState(
         reducer: (OrderScreenState) -> OrderScreenState
@@ -71,13 +78,6 @@ internal class OrderViewModel(
         }
     }
 
-    fun onCilindroLeftChange(value: String) {
-        updateState { it.copy(cilindroLeft = value) }
-    }
-
-    fun onCilindroRightChange(value: String) {
-        updateState { it.copy(cilindroRight = value) }
-    }
 
     private fun fetchAllRecommendations() {
         viewModelScope.launch(coroutineDispatcher) {
